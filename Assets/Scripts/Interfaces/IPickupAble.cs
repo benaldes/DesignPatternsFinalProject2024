@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class IPickupAble : MonoBehaviour
+namespace Interfaces
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IPickupAble
     {
-        
+        public int pickupID { get; set; }
+        public PickupType pickupType { get; set; }
+        public void OnPickedUp(PickupType type);
     }
 
-    // Update is called once per frame
-    void Update()
+    public enum PickupType
     {
-        
+        SpeedBoost,
+        ScoreBoost100
     }
 }
