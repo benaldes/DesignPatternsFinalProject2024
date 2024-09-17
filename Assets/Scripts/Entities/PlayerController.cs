@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour, IDamageAble, IPickupConsumer, IEv
         {
             damageCooldown -= Time.deltaTime;
         }
+        
     }
 
     // Update is called once per frame
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour, IDamageAble, IPickupConsumer, IEv
         {
             case EventType.DamageEvent:
                 DamageEvent damageEvent = (DamageEvent)eventMessage;
-                if (damageEvent._senderID == SenderID)
+                if ((PlayerController)damageEvent._target == this)
                 {
                     ((IDamageAble)this).TakeDamage(damageEvent._damage);
                 }

@@ -12,6 +12,8 @@ public class PickupManager : SingletonMonoBehaviour<PickupManager>, IEventListen
 {
     [SerializeField] private List<Pickup> _pickupPrefabs;
     private Dictionary<int, Pickup> _pickupsByID;
+    
+    int timer = 0;
 
     protected override void Awake()
     {
@@ -28,14 +30,15 @@ public class PickupManager : SingletonMonoBehaviour<PickupManager>, IEventListen
     // Update is called once per frame
     void Update()
     {
-        if (Time.time % 1 == 0)
+        if (Time.time > timer)
         {
+            timer++;
             Pickup newPickup = Instantiate(_pickupPrefabs[Random.Range(0, _pickupPrefabs.Count)]);
             newPickup.pickupID = IDProvider.GetID();
             _pickupsByID.Add(newPickup.pickupID, newPickup);
             newPickup.transform.position = new Vector2(Random.Range(-8f, 8f), Random.Range(-5f, 5f));
             newPickup.pickupType = (PickupType)Random.Range(0, 2);
-            newPickup.OnPickedUp(newPickup.pickupType);
+            //newPickup.OnPickedUp(newPickup.pickupType);
         } 
     }
 
@@ -46,8 +49,9 @@ public class PickupManager : SingletonMonoBehaviour<PickupManager>, IEventListen
             PickupEvent pickupEvent = (PickupEvent)eventMessage;
             if (_pickupsByID.ContainsKey(pickupEvent._pickupAble.pickupID))
             {
-                _pickupsByID[pickupEvent._senderID].OnPickedUp(pickupEvent._pickupAble.pickupType);
-                _pickupsByID.Remove(pickupEvent._senderID);
+                _pickupsByID[pickupEvent._pickupAble.pickupID].OnPickedUp();
+                //_pickupsByID[pickupEvent._senderID].OnPickedUp(pickupEvent._pickupAble.pickupType);
+                _pickupsByID.Remove(pickupEvent._pickupAble.pickupID);
             }
         }
     }

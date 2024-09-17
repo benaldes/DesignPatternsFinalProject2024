@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>, IEventListener
 {
-    public PlayerController currentPlayer { get; private set; }
+    public PlayerController currentPlayer;
 
     public bool TryGetPlayerPosition(out Vector2 playerPosition)
     {

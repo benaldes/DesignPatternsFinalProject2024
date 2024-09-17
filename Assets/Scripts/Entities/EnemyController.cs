@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour, IDamageAble, IEventListener, IEven
     {
         if (GameManager.Instance.TryGetPlayerPosition(out Vector2 directionToPlayer))
         {
+            directionToPlayer = (directionToPlayer - (Vector2)transform.position).normalized;
             rb2d.velocity = directionToPlayer * moveSpeed;
         }
         else
@@ -37,7 +38,7 @@ public class EnemyController : MonoBehaviour, IDamageAble, IEventListener, IEven
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Player") && TryGetComponent(typeof(IDamageAble), out var player))
+        if (other.gameObject.CompareTag("Player") && other.TryGetComponent(typeof(IDamageAble), out var player))
         {
             SendEvent(new DamageEvent(SenderID, damageDealt, (IDamageAble)player, this));
         }
@@ -84,7 +85,7 @@ public class EnemyController : MonoBehaviour, IDamageAble, IEventListener, IEven
         {
             case EventType.DamageEvent:
                 DamageEvent damageEvent = (DamageEvent)eventMessage;
-                if ((EnemyController)damageEvent._target == this)
+                if (damageEvent._target == this)
                 {
                     ((IDamageAble)this).TakeDamage(damageEvent._damage);
                 }
